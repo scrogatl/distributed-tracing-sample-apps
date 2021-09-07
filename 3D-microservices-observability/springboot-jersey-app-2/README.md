@@ -19,9 +19,9 @@ which makes shirts for the beach. The application is based on spring boot web us
 
   ```bash
   mvn -pl registration spring-boot:run &
-  mvn -pl delivery spring-boot:run &
-  mvn -pl styling spring-boot:run &
-  mvn -pl shopping spring-boot:run &
+  mvn -pl common,delivery spring-boot:run &
+  mvn -pl common,styling spring-boot:run &
+  mvn -pl common,shopping spring-boot:run &
   ```
 - If you are using an IDE like intellij, you can also group these mvn projects together to start them up in a group.
 
