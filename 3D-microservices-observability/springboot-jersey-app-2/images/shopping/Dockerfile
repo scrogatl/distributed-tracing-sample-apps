@@ -1,5 +1,6 @@
 FROM openjdk:8-jre
 
-ARG JAR
+COPY shopping.jar /
 
-COPY $JAR\.jar /
+WORKDIR /
+CMD java -jar shopping.jar

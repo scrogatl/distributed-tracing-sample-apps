@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tracing-demo
+    service: styling
+    shard: blue
+  name: styling-blue
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracing-demo
+      service: styling
+      shard: blue
+  template:
+    metadata:
+      labels:
+        app: tracing-demo
+        service: styling
+        shard: blue
+    spec:
+      containers:
+      - name: styling
+        image: 192.168.1.8/3dtracing/styling:latest
+        imagePullPolicy: Always
+        # command:
+        # - "java"
+        # - "-jar"
+        # - "/styling.jar"
+        ports:
+        - containerPort: 3333
+          name: application
+          protocol: TCP
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 350Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: styling
+  namespace: default
+spec: 
+  selector:
+    app: tracing-demo
+    service: styling  
+  type: ClusterIP
+  ports:
+  - name: application
+    port: 3333

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tracing-demo
+    service: delivery
+    shard: blue
+  name: delivery-blue
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracing-demo
+      service: delivery
+      shard: blue
+  template:
+    metadata:
+      labels:
+        app: tracing-demo
+        service: delivery
+        shard: blue
+    spec:
+      containers:
+      - name: delivery
+        image: 192.168.1.8/3dtracing/delivery:latest
+        imagePullPolicy: Always
+        # command:
+        # - "java"
+        # - "-jar"
+        # - "/delivery.jar"
+        ports:
+        - containerPort: 2222
+          name: application
+          protocol: TCP
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 350Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: delivery
+  namespace: default
+spec: 
+  selector:
+    app: tracing-demo
+    service: delivery  
+  type: ClusterIP
+  ports:
+  - name: application
+    port: 2222

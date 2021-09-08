@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: tracing-demo
+    service: registration
+    shard: blue
+  name: registration-blue
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tracing-demo
+      service: registration
+      shard: blue
+  template:
+    metadata:
+      labels:
+        app: tracing-demo
+        service: registration
+        shard: blue
+    spec:
+      containers:
+      - name: registration
+        image: 192.168.1.8/3dtracing/registration:latest
+        imagePullPolicy: Always
+        # command:
+        # - "java"
+        # - "-jar"
+        # - "/registration.jar"
+        ports:
+        - containerPort: 1111
+          name: application
+          protocol: TCP
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 350Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: registration
+  namespace: default
+spec: 
+  selector:
+    app: tracing-demo
+    service: registration  
+  type: LoadBalancer
+  ports:
+  - name: application
+    port: 1111
